@@ -23,6 +23,13 @@ import sys
 import requests
 from pathlib import Path
 
+# .env ファイルがあれば読み込む
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv がない場合はスキップ
+
 
 class GitHubIssueCreator:
     def __init__(self, owner, repo, token):
@@ -65,8 +72,20 @@ class GitHubIssueCreator:
             return issue_number
 
         except requests.exceptions.RequestException as e:
+            error_msg = str(e)
             print(f"✗ Failed to create issue: {title}")
-            print(f"  Error: {e}")
+            print(f"  Error: {error_msg}")
+
+            # 詳細なエラー解析
+            if "401" in error_msg:
+                print("  💡 Hint: Invalid or expired token. Check GITHUB_TOKEN value.")
+            elif "403" in error_msg:
+                print("  💡 Hint: Token doesn't have required permissions (repo scope needed).")
+            elif "404" in error_msg:
+                print("  💡 Hint: Repository not found. Check GITHUB_OWNER and GITHUB_REPO.")
+            elif "422" in error_msg:
+                print("  💡 Hint: Invalid payload or duplicate issue.")
+
             return None
 
     def create_phase_issues(self, data):
@@ -258,12 +277,33 @@ def main():
     owner = os.getenv('GITHUB_OWNER', 'Akier-X')
     repo = os.getenv('GITHUB_REPO', 'auto-trade-system')
 
+    # デバッグ情報表示
+    print("="*70)
+    print("DEBUG INFORMATION")
+    print("="*70)
+    print(f"Owner: {owner}")
+    print(f"Repository: {repo}")
+    print(f"Token set: {bool(token)}")
+    if token:
+        print(f"Token preview: {token[:10]}...{token[-10:]}")
+    print("="*70 + "\n")
+
     if not token:
         print("ERROR: GITHUB_TOKEN environment variable not set")
-        print("\nTo use this script:")
-        print("1. Generate a Personal Access Token at https://github.com/settings/tokens")
-        print("2. Set the token: export GITHUB_TOKEN='your_token_here'")
-        print("3. Run this script again")
+        print("\n【Windows ユーザーの設定方法】")
+        print("\n1. Personal Access Token を生成:")
+        print("   https://github.com/settings/tokens")
+        print("   → 「Generate new token (classic)」をクリック")
+        print("   → Scopeで「repo」を選択")
+        print("   → 「Generate token」")
+        print("   → トークンをコピー（表示されるのは1度だけ！）")
+        print("\n2. 環境変数を設定（PowerShell）:")
+        print("   $env:GITHUB_TOKEN='ghp_xxxxx...'")
+        print("   (Windows + R → cmd → setx GITHUB_TOKEN \"ghp_xxxxx...\" でも可)")
+        print("\n3. スクリプト再実行:")
+        print("   python scripts/create_github_issues.py")
+        print("\n4. トークンが正しく設定されたか確認:")
+        print("   python -c \"import os; print('Token set:', bool(os.getenv('GITHUB_TOKEN')))\"")
         sys.exit(1)
 
     # JSONファイルのパス
