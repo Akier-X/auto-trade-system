@@ -188,16 +188,33 @@ auto-trade-system/
 
 ---
 
-## セットアップ手順
+## セットアップ手順（Git Bash）
 
 ### 前提条件
+- **Git Bash** （Windows）または **Linux/Mac ターミナル**
 - Python 3.10+
 - PostgreSQL 13+（またはSupabase無料枠）
-- OpenAI API キー
-- Google Gemini API キー
-- Anthropic Claude API キー
 
-### インストール
+### クイックセットアップ（推奨 ⭐）
+
+```bash
+# リポジトリクローン
+git clone https://github.com/Akier-X/auto-trade-system.git
+cd auto-trade-system
+
+# 自動セットアップスクリプト実行（Git Bash）
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+```
+
+**自動実行内容**:
+- ✅ Python 仮想環境作成
+- ✅ 依存パッケージインストール
+- ✅ .env ファイル作成
+- ✅ Git リポジトリ確認
+- ✅ セットアップ完了メッセージ
+
+### 手動セットアップ
 
 ```bash
 # リポジトリクローン
@@ -206,16 +223,16 @@ cd auto-trade-system
 
 # 仮想環境作成
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# または
-venv\Scripts\activate  # Windows
+
+# 仮想環境を有効化（Git Bash）
+source venv/Scripts/activate
 
 # 依存パッケージインストール
 pip install -r requirements.txt
 
 # 環境変数設定
 cp config/.env.example .env
-# .envを編集して、各APIキーとDB設定を入力
+nano .env  # 編集：GITHUB_TOKEN、DB設定、APIキーを入力
 ```
 
 ### PostgreSQL初期化

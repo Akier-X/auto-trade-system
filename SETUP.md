@@ -1,15 +1,35 @@
-# Project Alpha: セットアップガイド
+# Project Alpha: Git Bash セットアップガイド
 
-このドキュメントは、Project Alphaを初めて環境構築する際の手順を記載しています。
+このドキュメントは、Project Alpha を Git Bash 環境で構築する際の手順を記載しています。
 
 ## 前提条件
 
+- **Git Bash** （https://git-scm.com/ からインストール）
 - Python 3.10以上
 - PostgreSQL 13以上（またはSupabase無料枠）
-- Git
-- pip（Pythonパッケージマネージャ）
 
-## ステップ1：リポジトリクローン・仮想環境構築
+## ステップ1：自動セットアップ（推奨）
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/Akier-X/auto-trade-system.git
+cd auto-trade-system
+
+# セットアップスクリプトを実行
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+```
+
+スクリプトが以下を自動実行：
+- Python 仮想環境の作成
+- 依存パッケージのインストール
+- .env ファイルの作成
+- Git リポジトリの確認
+- セットアップ完了メッセージ表示
+
+スクリプト実行後、.env ファイルを編集して API キーを設定してください。
+
+## ステップ2：手動セットアップ（スクリプト実行できない場合）
 
 ```bash
 # リポジトリをクローン
@@ -19,23 +39,21 @@ cd auto-trade-system
 # 仮想環境を作成
 python -m venv venv
 
-# 仮想環境を有効化
-source venv/bin/activate  # Linux/Mac
-# または
-venv\Scripts\activate  # Windows
+# 仮想環境を有効化（Git Bash）
+source venv/Scripts/activate
 
 # 依存パッケージをインストール
 pip install -r requirements.txt
 ```
 
-## ステップ2：環境設定
+## ステップ3：環境変数設定
 
 ```bash
 # テンプレートから .env を作成
 cp config/.env.example .env
 
 # .env を開いて、各設定値を入力
-nano .env  # または任意のエディタで編集
+nano .env  # または code .env で VS Code で編集
 ```
 
 ### 重要な設定項目
@@ -62,7 +80,7 @@ KABU_API_KEY=...
 IB_ACCOUNT_ID=...
 ```
 
-## ステップ3：PostgreSQL環境構築
+## ステップ4：PostgreSQL環境構築
 
 ### オプションA：ローカルPostgreSQL（推奨・開発環境）
 
