@@ -73,8 +73,8 @@ echo ""
 # ステップ 3: 依存パッケージのインストール
 # ============================================================================
 echo -e "${YELLOW}[3/5]${NC} Installing dependencies..."
-echo "   This may take a few minutes..."
-pip install -q -r requirements.txt 2>/dev/null
+echo "   This may take a few minutes (downloading 300+ MB)..."
+pip install -r requirements.txt
 echo -e "   ${GREEN}✓${NC} Dependencies installed"
 echo ""
 
