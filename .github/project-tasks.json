@@ -1,0 +1,465 @@
+{
+  "project": {
+    "name": "Project Alpha: Multi-Source AI Trading System",
+    "description": "Automated trading system with multi-source intelligence and LLM consensus",
+    "owner": "Akier-X",
+    "repository": "auto-trade-system"
+  },
+  "phases": [
+    {
+      "phase_id": 1,
+      "phase_name": "Phase 1: PostgreSQL基盤構築",
+      "duration": "Week 1-2",
+      "status": "not_started",
+      "priority": "critical",
+      "tasks": [
+        {
+          "task_id": "1-1",
+          "title": "PostgreSQL環境構築",
+          "description": "ローカルまたはSupabase環境でPostgresQL構築。接続テスト完了。",
+          "estimated_hours": 4,
+          "assignee": null,
+          "labels": ["database", "setup"],
+          "acceptance_criteria": [
+            "PostgreSQL接続確認（psql接続成功）",
+            "接続情報が.envに設定済み",
+            "バックアップ戦略定義完了"
+          ]
+        },
+        {
+          "task_id": "1-2",
+          "title": "stocks_master テーブル作成・データ投入",
+          "description": "全銘柄（約3,800銘柄）のマスターテーブルをDB化。インデックス作成。",
+          "estimated_hours": 6,
+          "assignee": null,
+          "labels": ["database", "ddl"],
+          "acceptance_criteria": [
+            "JPXから全銘柄リスト取得",
+            "stocks_masterテーブル作成",
+            "3,800件のデータがインポート済み",
+            "インデックス作成完了"
+          ]
+        },
+        {
+          "task_id": "1-3",
+          "title": "基盤テーブル設計・作成",
+          "description": "12個のコア・テーブル定義・作成。Phase 2以降の受け皿完成。",
+          "estimated_hours": 8,
+          "assignee": null,
+          "labels": ["database", "ddl"],
+          "acceptance_criteria": [
+            "全12テーブルのDDL定義完了",
+            "リレーショナルキーの設定完了",
+            "インデックス・制約設定完了",
+            "テーブル間の整合性確認完了"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": 2,
+      "phase_name": "Phase 2: マルチソースデータ取得",
+      "duration": "Week 3-4",
+      "status": "not_started",
+      "priority": "critical",
+      "tasks": [
+        {
+          "task_id": "2-1",
+          "title": "X（Twitter）データ取得パイプライン",
+          "description": "IFTTT経由で特定アカウントの投稿を自動取得。Webhook実装。",
+          "estimated_hours": 6,
+          "assignee": null,
+          "labels": ["ingestion", "ifttt", "x-api"],
+          "acceptance_criteria": [
+            "Flask/FastAPI Webhook実装",
+            "IFTTT設定完了",
+            "テスト投稿の受信確認",
+            "raw_tweetsテーブルへのINSERT確認"
+          ]
+        },
+        {
+          "task_id": "2-2",
+          "title": "ニュース/RSSフィード取得",
+          "description": "RSSフィード監視。複数メディアから定期的にニュースを取得。",
+          "estimated_hours": 4,
+          "assignee": null,
+          "labels": ["ingestion", "news"],
+          "acceptance_criteria": [
+            "feedparserライブラリ実装",
+            "複数RSSフィード登録",
+            "スケジューラ設定（30分ごと）",
+            "raw_newsテーブルへのデータ保存確認"
+          ]
+        },
+        {
+          "task_id": "2-3",
+          "title": "Reddit投稿監視",
+          "description": "PRAW（Reddit API）でr/stocks等を監視。投稿を自動取得。",
+          "estimated_hours": 4,
+          "assignee": null,
+          "labels": ["ingestion", "reddit"],
+          "acceptance_criteria": [
+            "Reddit APIクレデンシャル取得",
+            "PRAW実装",
+            "監視対象サブレディット設定",
+            "raw_redditテーブルへのデータ保存確認"
+          ]
+        },
+        {
+          "task_id": "2-4",
+          "title": "適時開示（TDnet）データ取得",
+          "description": "企業の公式適時開示をリアルタイム取得。",
+          "estimated_hours": 5,
+          "assignee": null,
+          "labels": ["ingestion", "tdnet"],
+          "acceptance_criteria": [
+            "TDnet APIスクレイパー実装",
+            "銘柄コード抽出ロジック",
+            "raw_tdnetテーブル作成・テスト"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": 3,
+      "phase_name": "Phase 3: AI分析エンジン",
+      "duration": "Week 5-7",
+      "status": "not_started",
+      "priority": "critical",
+      "tasks": [
+        {
+          "task_id": "3-1",
+          "title": "複数LLM並列呼び出しスクリプト",
+          "description": "Gemini、GPT、Claudeの3つのモデルに同時にリクエスト。非同期処理。",
+          "estimated_hours": 8,
+          "assignee": null,
+          "labels": ["analysis", "llm", "asyncio"],
+          "acceptance_criteria": [
+            "asyncio実装（3つのモデル並列呼び出し）",
+            "OpenAI API実装",
+            "Anthropic API実装",
+            "Google Gemini API実装",
+            "レート制限・リトライ対応"
+          ]
+        },
+        {
+          "task_id": "3-2",
+          "title": "プロンプト定義・テンプレート化",
+          "description": "各ステップのプロンプトを統一・最適化。",
+          "estimated_hours": 6,
+          "assignee": null,
+          "labels": ["analysis", "prompts"],
+          "acceptance_criteria": [
+            "抽出用プロンプト定義",
+            "検証用プロンプト定義",
+            "合議用プロンプト定義",
+            "プロンプト最適化テスト完了"
+          ]
+        },
+        {
+          "task_id": "3-3",
+          "title": "合議制スコアリング・ロジック",
+          "description": "複数LLMの結果を統計的に処理し、最終判定を決定。",
+          "estimated_hours": 6,
+          "assignee": null,
+          "labels": ["analysis", "consensus"],
+          "acceptance_criteria": [
+            "平均値・標準偏差計算",
+            "加重平均アルゴリズム",
+            "最終判定ロジック実装",
+            "テスト・検証完了"
+          ]
+        },
+        {
+          "task_id": "3-4",
+          "title": "DB保存ロジック",
+          "description": "分析結果をanalysis_scoresとfinal_consensusに保存。",
+          "estimated_hours": 4,
+          "assignee": null,
+          "labels": ["analysis", "database"],
+          "acceptance_criteria": [
+            "analysis_scoresへのINSERT",
+            "final_consensusへのINSERT",
+            "トランザクション処理",
+            "エラーハンドリング"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": 4,
+      "phase_name": "Phase 4: メモリ化・RAG実装",
+      "duration": "Week 8-9",
+      "status": "not_started",
+      "priority": "high",
+      "tasks": [
+        {
+          "task_id": "4-1",
+          "title": "pgvector導入・セットアップ",
+          "description": "PostgreSQLで高次元ベクトル検索を実現。",
+          "estimated_hours": 3,
+          "assignee": null,
+          "labels": ["database", "vector", "pgvector"],
+          "acceptance_criteria": [
+            "pgvector拡張インストール",
+            "embeddingカラム追加",
+            "インデックス作成（IVFFlat/HNSW）"
+          ]
+        },
+        {
+          "task_id": "4-2",
+          "title": "Embedding生成パイプライン",
+          "description": "すべての収集データをベクトル化し、pgvectorに保存。",
+          "estimated_hours": 4,
+          "assignee": null,
+          "labels": ["analysis", "embedding"],
+          "acceptance_criteria": [
+            "OpenAI Embedding API実装",
+            "バッチ処理実装",
+            "定期実行スケジューラ"
+          ]
+        },
+        {
+          "task_id": "4-3",
+          "title": "相関分析・メモリ検索",
+          "description": "新しい情報が来たとき、過去の関連情報を自動検索。",
+          "estimated_hours": 5,
+          "assignee": null,
+          "labels": ["analysis", "memory", "rag"],
+          "acceptance_criteria": [
+            "ベクトル類似度検索実装",
+            "銘柄ごとのメモリ取得",
+            "LLMコンテキスト統合"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": 5,
+      "phase_name": "Phase 5: 最適化・自動売買",
+      "duration": "Week 10-12",
+      "status": "not_started",
+      "priority": "high",
+      "tasks": [
+        {
+          "task_id": "5-1",
+          "title": "ポートフォリオ最適化エンジン",
+          "description": "ケリー基準を使用した最適配分計算。",
+          "estimated_hours": 6,
+          "assignee": null,
+          "labels": ["optimization", "portfolio"],
+          "acceptance_criteria": [
+            "Kelly Criterion実装",
+            "配分アルゴリズム実装",
+            "リスク制限強制",
+            "テスト・検証"
+          ]
+        },
+        {
+          "task_id": "5-2",
+          "title": "リスク管理エンジン",
+          "description": "損失上限、ポジションサイズ制限などの自動管理。",
+          "estimated_hours": 4,
+          "assignee": null,
+          "labels": ["optimization", "risk"],
+          "acceptance_criteria": [
+            "損失上限チェック",
+            "ポジションサイズ計算",
+            "ストップロス自動実装",
+            "リバランスロジック"
+          ]
+        },
+        {
+          "task_id": "5-3",
+          "title": "証券会社API連携",
+          "description": "auカブコム証券またはInteractive Brokersと連携。",
+          "estimated_hours": 8,
+          "assignee": null,
+          "labels": ["execution", "broker-api"],
+          "acceptance_criteria": [
+            "kabuステーションAPI実装",
+            "注文送信テスト",
+            "約定確認・DB記録",
+            "エラーハンドリング"
+          ]
+        },
+        {
+          "task_id": "5-4",
+          "title": "モニタリング・ダッシュボード",
+          "description": "Streamlit等でリアルタイム監視ボード構築。",
+          "estimated_hours": 6,
+          "assignee": null,
+          "labels": ["monitoring", "ui"],
+          "acceptance_criteria": [
+            "Webダッシュボード構築",
+            "リアルタイム収益グラフ",
+            "取引履歴表示",
+            "アラート機能"
+          ]
+        }
+      ]
+    }
+  ],
+  "database_tables": [
+    {
+      "table_id": "t1",
+      "table_name": "stocks_master",
+      "purpose": "全銘柄マスター",
+      "record_growth": "low",
+      "importance": 5,
+      "columns": [
+        {"name": "ticker_code", "type": "VARCHAR(10)", "pk": true},
+        {"name": "company_name", "type": "VARCHAR(255)", "pk": false},
+        {"name": "sector", "type": "VARCHAR(100)", "pk": false},
+        {"name": "market_cap", "type": "BIGINT", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t2",
+      "table_name": "raw_tweets",
+      "purpose": "X投稿の生データ",
+      "record_growth": "high",
+      "importance": 4,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "account_id", "type": "VARCHAR(100)", "pk": false},
+        {"name": "content", "type": "TEXT", "pk": false},
+        {"name": "processed", "type": "BOOLEAN", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t3",
+      "table_name": "raw_news",
+      "purpose": "ニュース記事の生データ",
+      "record_growth": "medium",
+      "importance": 4,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "source_name", "type": "VARCHAR(255)", "pk": false},
+        {"name": "title", "type": "VARCHAR(500)", "pk": false},
+        {"name": "content", "type": "TEXT", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t4",
+      "table_name": "raw_reddit",
+      "purpose": "Reddit投稿の生データ",
+      "record_growth": "medium",
+      "importance": 3,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "subreddit", "type": "VARCHAR(255)", "pk": false},
+        {"name": "title", "type": "VARCHAR(500)", "pk": false},
+        {"name": "content", "type": "TEXT", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t5",
+      "table_name": "raw_tdnet",
+      "purpose": "企業適時開示",
+      "record_growth": "medium",
+      "importance": 4,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "ticker_code", "type": "VARCHAR(10)", "pk": false},
+        {"name": "disclosure_type", "type": "VARCHAR(100)", "pk": false},
+        {"name": "title", "type": "VARCHAR(500)", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t6",
+      "table_name": "intelligence_memory",
+      "purpose": "マルチソース統合メモリ",
+      "record_growth": "high",
+      "importance": 5,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "ticker_code", "type": "VARCHAR(10)", "pk": false},
+        {"name": "source_type", "type": "VARCHAR(20)", "pk": false},
+        {"name": "original_text", "type": "TEXT", "pk": false},
+        {"name": "embedding", "type": "vector(1536)", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t7",
+      "table_name": "monitored_tickers",
+      "purpose": "監視対象銘柄の動的管理",
+      "record_growth": "medium",
+      "importance": 4,
+      "columns": [
+        {"name": "ticker_code", "type": "VARCHAR(10)", "pk": true},
+        {"name": "priority_level", "type": "INTEGER", "pk": false},
+        {"name": "accuracy_rate", "type": "NUMERIC(3,2)", "pk": false},
+        {"name": "is_active", "type": "BOOLEAN", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t8",
+      "table_name": "analysis_scores",
+      "purpose": "各LLMのスコアリング結果",
+      "record_growth": "high",
+      "importance": 4,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "intelligence_id", "type": "BIGINT", "pk": false},
+        {"name": "model_name", "type": "VARCHAR(50)", "pk": false},
+        {"name": "veracity_score", "type": "NUMERIC(5,2)", "pk": false},
+        {"name": "confidence_score", "type": "NUMERIC(3,2)", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t9",
+      "table_name": "final_consensus",
+      "purpose": "複数LLM合議結果",
+      "record_growth": "high",
+      "importance": 5,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "intelligence_id", "type": "BIGINT", "pk": false},
+        {"name": "aggregated_score", "type": "NUMERIC(5,2)", "pk": false},
+        {"name": "final_decision", "type": "VARCHAR(50)", "pk": false},
+        {"name": "is_executed", "type": "BOOLEAN", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t10",
+      "table_name": "portfolio_mgmt",
+      "purpose": "資産・ポートフォリオ管理",
+      "record_growth": "low",
+      "importance": 5,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "total_assets", "type": "NUMERIC(15,2)", "pk": false},
+        {"name": "available_cash", "type": "NUMERIC(15,2)", "pk": false},
+        {"name": "win_rate", "type": "NUMERIC(3,2)", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t11",
+      "table_name": "trade_history",
+      "purpose": "売買履歴",
+      "record_growth": "medium",
+      "importance": 4,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "ticker_code", "type": "VARCHAR(10)", "pk": false},
+        {"name": "order_type", "type": "VARCHAR(20)", "pk": false},
+        {"name": "entry_price", "type": "NUMERIC(10,2)", "pk": false},
+        {"name": "pnl", "type": "NUMERIC(15,2)", "pk": false}
+      ]
+    },
+    {
+      "table_id": "t12",
+      "table_name": "source_performance",
+      "purpose": "情報源の的中率統計",
+      "record_growth": "low",
+      "importance": 3,
+      "columns": [
+        {"name": "id", "type": "BIGSERIAL", "pk": true},
+        {"name": "source_name", "type": "VARCHAR(255)", "pk": false},
+        {"name": "accuracy_rate", "type": "NUMERIC(3,2)", "pk": false},
+        {"name": "avg_return", "type": "NUMERIC(6,3)", "pk": false}
+      ]
+    }
+  ]
+}
