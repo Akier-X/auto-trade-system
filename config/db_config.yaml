@@ -1,0 +1,60 @@
+# Database Configuration for Auto Trade System
+# ============================================================================
+
+# PostgreSQL Connection Settings
+# For local development or production use
+
+database:
+  # Database type
+  type: postgresql
+
+  # Connection details
+  host: ${DB_HOST:localhost}
+  port: ${DB_PORT:5432}
+  database: ${DB_NAME:auto_trade_system}
+  user: ${DB_USER:postgres}
+  password: ${DB_PASSWORD:}
+
+  # Connection pool settings
+  pool:
+    min_size: 2
+    max_size: 10
+    max_overflow: 20
+    pool_timeout: 30
+    pool_recycle: 3600
+
+  # SQLAlchemy settings
+  echo: false  # Set to true for SQL debugging
+  echo_pool: false
+
+  # SSL settings (for production)
+  ssl:
+    enabled: false
+    cert_path: null
+    key_path: null
+    ca_path: null
+
+# Supabase Configuration (Alternative)
+# Uncomment to use Supabase instead of local PostgreSQL
+# supabase:
+#   url: ${SUPABASE_URL:}
+#   key: ${SUPABASE_KEY:}
+#   service_role_key: ${SUPABASE_SERVICE_ROLE_KEY:}
+
+# Backup settings
+backup:
+  enabled: true
+  frequency: daily  # daily, weekly, monthly
+  retention_days: 30
+  path: ./backups/
+
+# Performance settings
+performance:
+  statement_timeout: 60000  # milliseconds
+  idle_in_transaction_session_timeout: 300000  # milliseconds
+
+# Logging
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  sql_queries: false
+  slow_query_threshold: 1000  # milliseconds

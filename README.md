@@ -263,14 +263,82 @@ python src/main.py
 
 ## 開発状況
 
+更新日時: 2026-02-01
+
+### Phase 1: PostgreSQL基盤構築 ✅ 完了
 - [x] プロジェクト基本構成・ドキュメント整備
-- [ ] PostgreSQL環境構築・初期テーブル作成
-- [ ] Webhookサーバー実装（IFTTT連携）
-- [ ] LLM並列呼び出し実装
-- [ ] 合議制ロジック実装
+- [x] PostgreSQL設定ファイル作成 (`config/db_config.yaml`)
+- [x] DBマネージャークラス実装 (`src/storage/db_manager.py`)
+- [x] 全12テーブルDDL定義 (`src/storage/queries.sql`)
+- [x] DBセットアップスクリプト (`scripts/setup_database.py`)
+- [x] stocks_masterインポートスクリプト (`scripts/import_stocks_master.py`)
+
+### Phase 2: データ取得パイプライン 🚧 進行中（75%完了）
+- [x] Webhookサーバー実装 (`src/ingestion/webhook_server.py`)
+  - ✅ X (Twitter) エンドポイント
+  - ✅ News エンドポイント
+  - ✅ Reddit エンドポイント
+- [x] ニュースフィード取得 (`src/ingestion/news_feed.py`)
+  - ✅ RSS監視（Google News, Yahoo Finance等）
+  - ✅ スケジューラ実装
+- [x] Reddit監視 (`src/ingestion/reddit_monitor.py`)
+  - ✅ PRAW実装
+  - ✅ 銘柄検索機能
+- [ ] TDnet適時開示取得（未実装）
+
+### Phase 3: AI分析エンジン 🚧 進行中（25%完了）
+- [x] プロンプトテンプレート (`src/analysis/prompts.py`)
+  - ✅ 情報抽出プロンプト
+  - ✅ 真偽性検証プロンプト
+  - ✅ 合議制判定プロンプト
+- [ ] LLM並列呼び出し実装（進行中）
+- [ ] 合議制スコアリングロジック（未実装）
+- [ ] DB保存ロジック統合（未実装）
+
+### Phase 4: メモリ化・RAG 📋 未着手
+- [ ] pgvector導入・セットアップ
+- [ ] Embedding生成パイプライン
+- [ ] 相関分析・メモリ検索
+
+### Phase 5: 最適化・自動売買 📋 未着手
 - [ ] ポートフォリオ最適化エンジン
+- [ ] リスク管理エンジン
 - [ ] 証券会社API連携
+- [ ] モニタリングダッシュボード
 - [ ] 本番運用
+
+### 実装済みファイル一覧
+
+```
+✅ config/db_config.yaml              # DB設定
+✅ src/storage/db_manager.py          # DBマネージャー
+✅ src/storage/queries.sql            # 全テーブルDDL
+✅ src/ingestion/webhook_server.py    # Webhookサーバー
+✅ src/ingestion/news_feed.py         # ニュースフィード
+✅ src/ingestion/reddit_monitor.py    # Reddit監視
+✅ src/analysis/prompts.py            # プロンプトテンプレート
+✅ scripts/setup_database.py          # DB初期化
+✅ scripts/import_stocks_master.py    # 銘柄データ投入
+```
+
+### 進行状況サマリー
+
+| Phase | タスク数 | 完了 | 進捗率 |
+|-------|---------|------|--------|
+| Phase 1 | 3 | 3 | 100% ✅ |
+| Phase 2 | 4 | 3 | 75% 🚧 |
+| Phase 3 | 4 | 1 | 25% 🚧 |
+| Phase 4 | 3 | 0 | 0% 📋 |
+| Phase 5 | 4 | 0 | 0% 📋 |
+| **全体** | **18** | **7** | **39%** |
+
+### 次のステップ
+
+1. **データベース接続テスト** - PostgreSQLインスタンスのセットアップと接続確認
+2. **stocks_masterデータ投入** - サンプルデータまたはJPXデータの投入
+3. **Webhookサーバーデプロイ** - クラウドへのデプロイ（Render/Heroku）
+4. **LLMオーケストレーター実装** - 複数LLM並列呼び出しの完成
+5. **統合テスト** - エンドツーエンドの動作確認
 
 ---
 
