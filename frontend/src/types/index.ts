@@ -1,12 +1,25 @@
 // Type definitions for the trading dashboard
 
+export type SignalType = 'BUY' | 'SELL' | 'WATCH';
+export type AgentName = 'GPT-4' | 'Gemini' | 'Claude';
+export type Decision = 'BUY' | 'SELL' | 'NEUTRAL';
+export type AgentStatusType = 'active' | 'idle' | 'waiting';
+export type LogType = 'info' | 'success' | 'warning' | 'error';
+export type TagType = 'normal' | 'warning';
+
+export interface AgentDecision {
+  agent: AgentName;
+  decision: Decision;
+  confidence: number;
+}
+
 export interface Signal {
   id: string;
   ticker: string;
   companyName: string;
   logo: string;
   exchange: string;
-  type: 'BUY' | 'SELL' | 'WATCH';
+  type: SignalType;
   consensusScore: number;
   kellySize: number;
   kellyAmount: number;
@@ -14,12 +27,6 @@ export interface Signal {
   agents: AgentDecision[];
   reasoning?: string;
   factors?: string;
-}
-
-export interface AgentDecision {
-  agent: 'GPT-4' | 'Gemini' | 'Claude';
-  decision: 'BUY' | 'SELL' | 'NEUTRAL';
-  confidence: number;
 }
 
 export interface PortfolioMetrics {
@@ -31,21 +38,21 @@ export interface PortfolioMetrics {
 
 export interface AgentStatus {
   name: string;
-  status: 'active' | 'idle' | 'waiting';
+  status: AgentStatusType;
   latency: number;
 }
 
 export interface LogEntry {
   timestamp: Date;
   message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
+  type: LogType;
   highlight?: boolean;
 }
 
 export interface MemoryTag {
   id: string;
   label: string;
-  type: 'normal' | 'warning';
+  type: TagType;
 }
 
 export interface ConsensusData {
